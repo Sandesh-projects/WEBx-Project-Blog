@@ -1,0 +1,106 @@
+.profile-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-banner {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+}
+
+.profile-content {
+  background-color: #fff;
+  width: 80%;
+  max-width: 600px;
+  margin-top: -70px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+/* Profile Info */
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: -60px;
+  border: 4px solid #fff;
+}
+
+.profile-name {
+  margin: 16px 0 8px;
+  font-size: 24px;
+}
+
+.profile-details {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.profile-details li {
+  margin: 6px 0;
+}
+
+/* Posts Container */
+.posts-container {
+  width: 95%;
+  /* max-width: 600px; */
+  margin: 40px 0;
+  padding: 20px;
+  background: #f3f3f3;
+  border-radius: 8px;
+}
+
+.posts-container h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: left;
+}
+
+.post-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.post-card {
+  /* width: calc(50% - 10px); Uncomment if you want a two-column layout */
+  width: 200px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+  display: flex;
+  flex-direction: column; /* Ensures content stacks properly */
+  align-items: center; /* Centers content horizontally */
+  overflow: hidden; /* Prevents content overflow */
+}
+
+.post-image {
+  width: 100%; /* Ensures the image takes the full width of .post-card */
+  height: 150px; /* Fixed height */
+  object-fit: contain; /* Ensures the whole image fits without cropping */
+  border-radius: 4px;
+}
+
+.post-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.post-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}

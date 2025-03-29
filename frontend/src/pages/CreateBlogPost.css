@@ -1,0 +1,54 @@
+.create-blog-container {
+  width: 60%;
+  margin: 40px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-blog-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.create-blog-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-blog-container input,
+.create-blog-container textarea {
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.create-blog-container textarea {
+  height: 150px;
+  resize: vertical;
+}
+
+.image-preview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.publish-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.publish-btn:hover {
+  background-color: #0056b3;
+}
