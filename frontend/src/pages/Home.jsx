@@ -21,19 +21,27 @@ function Home() {
         console.error(error);
       }
     };
-
-    fetchPosts(); // Call only once when the component mounts
+    fetchPosts(); // Fetch once when component mounts
   }, []);
+
+  const handleCardClick = (postId) => {
+    navigate(`/post/${postId}`);
+  };
 
   return (
     <div className="home-container">
       <div className="content">
         {posts.length > 0 ? (
-          posts.map((post, index) => (
-            <div key={index} onClick={() => navigate(`/post/${index}`)}>
+          posts.map((post) => (
+            <div key={post.postId} onClick={() => handleCardClick(post.postId)}>
               <BlogCard
                 image={post.image || "https://via.placeholder.com/150"}
-                date="Mar 29, 2025" // Hardcoded for now, update dynamically later
+                // className="blog-card-image"
+                date={
+                  post.timestamp
+                    ? new Date(post.timestamp).toLocaleDateString()
+                    : "N/A"
+                }
                 readTime="2"
                 title={post.title}
                 subtitle={post.content.substring(0, 50) + "..."}

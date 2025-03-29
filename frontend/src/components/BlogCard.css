@@ -9,6 +9,7 @@
   background-color: #fff;
   /* Optional: Add a slight box-shadow */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* object-fit: contain; */
 }
 
 .blog-image-container {
@@ -21,12 +22,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  object-fit: contain;
 }
 
 .blog-image {
   width: 100%;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .blog-content {

@@ -14,7 +14,6 @@ function BlogCard({
   return (
     <div className="blog-card">
       <div className="blog-image-container">
-        {/* If an image URL is provided, display it. Otherwise, keep empty space. */}
         {image && <img src={image} alt={title} className="blog-image" />}
       </div>
       <div className="blog-content">
@@ -22,7 +21,6 @@ function BlogCard({
           {date} | {readTime} min read
         </p>
         <h3 className="blog-title">{title}</h3>
-        <p className="blog-subtitle">{subtitle}</p>
         <div className="blog-stats">
           <span>{views} views</span>
           <span>{comments} comments</span>

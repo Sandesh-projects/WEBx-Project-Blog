@@ -13,7 +13,7 @@ function CreateBlogPost() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result); // base64 string
+        setImage(reader.result); // Convert image to base64 string
       };
       reader.readAsDataURL(file);
     }
@@ -27,7 +27,7 @@ function CreateBlogPost() {
       return;
     }
 
-    // Prepare the post data
+    // Prepare post data (timestamp is added on the backend)
     const newPost = { title, content, image };
 
     try {
@@ -41,15 +41,12 @@ function CreateBlogPost() {
           body: JSON.stringify(newPost),
         }
       );
-
       const data = await response.json();
       if (response.ok) {
-        // Post successfully saved
         console.log("New Post Saved:", data);
         alert("Post created successfully!");
         navigate("/home");
       } else {
-        // Some error from the backend
         alert(data.message || "Failed to create post.");
       }
     } catch (error) {

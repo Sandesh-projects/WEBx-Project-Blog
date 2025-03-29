@@ -6,6 +6,7 @@ import os
 import bcrypt
 from bson import ObjectId
 import random
+from datetime import datetime  # For timestamps
 
 load_dotenv()  # Load variables from .env
 
@@ -24,7 +25,7 @@ def register():
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
-
+    
     if not name or not email or not password:
         return jsonify({"message": "Missing required fields"}), 400
 
@@ -40,7 +41,6 @@ def register():
         "posts": []  # Empty list for blog posts
     }
     users_collection.insert_one(user_doc)
-
     return jsonify({"message": "User registered successfully"}), 201
 
 @app.route("/api/login", methods=["POST"])
@@ -48,7 +48,7 @@ def login():
     data = request.get_json()
     email = data.get("email")
     password = data.get("password")
-
+    
     if not email or not password:
         return jsonify({"message": "Missing email or password"}), 400
 
@@ -66,22 +66,35 @@ def login():
 
 @app.route("/api/posts", methods=["GET"])
 def get_random_posts():
-    users = list(users_collection.find({}, {"posts": 1}))  # Fetch only posts from all users
+    # Fetch only the posts fields from all users
+    users = list(users_collection.find({}, {"posts": 1}))
     all_posts = []
-    
     for user in users:
-        all_posts.extend(user.get("posts", []))  # Collect all posts
-
-    random.shuffle(all_posts)  # Shuffle posts to get randomness
-    max_posts = min(10, len(all_posts))  # Limit to 10 posts or available posts
-
+        all_posts.extend(user.get("posts", []))
+    
+    random.shuffle(all_posts)
+    max_posts = min(10, len(all_posts))
     return jsonify(all_posts[:max_posts]), 200
+
+@app.route("/api/post/<post_id>", methods=["GET"])
+def get_single_post(post_id):
+    """
+    Find the user document that contains a post with the given postId.
+    """
+    user = users_collection.find_one({"posts.postId": post_id})
+    if not user:
+        return jsonify({"message": "Post not found"}), 404
+
+    for post in user.get("posts", []):
+        if post.get("postId") == post_id:
+            return jsonify(post), 200
+    return jsonify({"message": "Post not found"}), 404
 
 @app.route("/api/user/<user_id>", methods=["GET"])
 def get_user(user_id):
     try:
         user_object_id = ObjectId(user_id)
-    except:
+    except Exception:
         return jsonify({"message": "Invalid user ID format"}), 400
 
     user = users_collection.find_one({"_id": user_object_id})
@@ -99,7 +112,7 @@ def get_user(user_id):
 def create_post(user_id):
     try:
         user_object_id = ObjectId(user_id)
-    except:
+    except Exception:
         return jsonify({"message": "Invalid user ID format"}), 400
 
     user = users_collection.find_one({"_id": user_object_id})
@@ -109,23 +122,89 @@ def create_post(user_id):
     data = request.get_json()
     title = data.get("title")
     content = data.get("content")
-    image = data.get("image")
+    image = data.get("image")  # Base64-encoded string
 
     if not title or not content:
         return jsonify({"message": "Title and content are required"}), 400
 
     new_post = {
+        "postId": str(ObjectId()),  # Unique ID for this post
         "title": title,
         "content": content,
         "image": image,
+        "timestamp": datetime.utcnow().isoformat(),
+        "comments": []  # Initialize empty comments array
     }
 
     users_collection.update_one(
         {"_id": user_object_id},
         {"$push": {"posts": new_post}}
     )
+    return jsonify({"message": "Post created successfully", "postId": new_post["postId"]}), 201
 
-    return jsonify({"message": "Post created successfully"}), 201
+@app.route("/api/post/<post_id>/add-comment", methods=["POST"])
+def add_comment(post_id):
+    # Find the user document that contains the post
+    user = users_collection.find_one({"posts.postId": post_id})
+    if not user:
+        return jsonify({"message": "Post not found"}), 404
+
+    data = request.get_json()
+    commenter = data.get("commenter")
+    comment_content = data.get("content")
+
+    if not commenter or not comment_content:
+        return jsonify({"message": "Commenter and comment content are required"}), 400
+
+    new_comment = {
+        "commentId": str(ObjectId()),
+        "commenter": commenter,
+        "content": comment_content,
+        "timestamp": datetime.utcnow().isoformat(),
+        "replies": []  # Initialize empty replies array
+    }
+
+    result = users_collection.update_one(
+        {"posts.postId": post_id},
+        {"$push": {"posts.$.comments": new_comment}}
+    )
+    if result.modified_count > 0:
+        return jsonify({"message": "Comment added successfully", "comment": new_comment}), 201
+    else:
+        return jsonify({"message": "Failed to add comment"}), 400
+
+@app.route("/api/post/<post_id>/add-reply", methods=["POST"])
+def add_reply(post_id):
+    # Find the user document that contains the post
+    user = users_collection.find_one({"posts.postId": post_id})
+    if not user:
+        return jsonify({"message": "Post not found"}), 404
+
+    data = request.get_json()
+    comment_id = data.get("commentId")
+    replyCommenter = data.get("replyCommenter")
+    replyContent = data.get("replyContent")
+
+    if not comment_id or not replyCommenter or not replyContent:
+        return jsonify({"message": "Comment ID, reply commenter, and reply content are required"}), 400
+
+    new_reply = {
+        "replyId": str(ObjectId()),
+        "replyCommenter": replyCommenter,
+        "replyContent": replyContent,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+    # Use arrayFilters to update the correct comment's replies array
+    result = users_collection.update_one(
+        {"posts.postId": post_id},
+        {"$push": {"posts.$[post].comments.$[comment].replies": new_reply}},
+        array_filters=[{"post.postId": post_id}, {"comment.commentId": comment_id}]
+    )
+    if result.modified_count > 0:
+        return jsonify({"message": "Reply added successfully", "reply": new_reply}), 201
+    else:
+        return jsonify({"message": "Failed to add reply"}), 400
 
 if __name__ == "__main__":
     app.run(debug=True)

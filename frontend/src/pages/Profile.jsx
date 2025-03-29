@@ -44,11 +44,12 @@ function Profile() {
     return <div className="profile-container">Loading...</div>;
   }
 
+  // Use the user's posts array; each post should have a unique postId
   const userPosts = user.posts || [];
 
-  const handlePostClick = (index) => {
-    // Navigate to the post detail page (modify route as needed)
-    navigate(`/post/${index}`);
+  const handlePostClick = (postId) => {
+    // Navigate using the unique postId rather than an array index
+    navigate(`/post/${postId}`);
   };
 
   return (
@@ -66,11 +67,11 @@ function Profile() {
         <h3>Your Posts</h3>
         {userPosts.length > 0 ? (
           <div className="post-list">
-            {userPosts.map((post, index) => (
+            {userPosts.map((post) => (
               <div
                 className="post-card"
-                key={index}
-                onClick={() => handlePostClick(index)}
+                key={post.postId}
+                onClick={() => handlePostClick(post.postId)}
               >
                 {post.image && (
                   <img

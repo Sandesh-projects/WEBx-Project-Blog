@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile"; // import the new Profile page
 import CreateBlogPost from "./pages/CreateBlogPost";
+import BlogPage from "./pages/BlogPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/create-post" element={<CreateBlogPost />} />
+        <Route path="/post/:postId" element={<BlogPage />} />
         {/* Add more routes if needed */}
       </Routes>
 

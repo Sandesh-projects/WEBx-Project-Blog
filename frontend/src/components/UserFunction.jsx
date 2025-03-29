@@ -26,9 +26,6 @@ function UserFunction() {
         <Link to="/settings" className="menu-item">
           ⚙️ Settings
         </Link>
-        <Link to="/view-blog" className="menu-item">
-          🔗 View Blog
-        </Link>
       </nav>
     </>
   );
