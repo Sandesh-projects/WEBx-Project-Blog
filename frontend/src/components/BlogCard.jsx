@@ -10,6 +10,7 @@ function BlogCard({
   views = 0,
   comments = 0,
   likes = 0,
+  author = "Unknown",
 }) {
   return (
     <div className="blog-card">
@@ -18,7 +19,7 @@ function BlogCard({
       </div>
       <div className="blog-content">
         <p className="blog-meta">
-          {date} | {readTime} min read
+          {date} | by {author} | {readTime} min read
         </p>
         <h3 className="blog-title">{title}</h3>
         <div className="blog-stats">

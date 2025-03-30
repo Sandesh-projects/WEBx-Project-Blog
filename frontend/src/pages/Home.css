@@ -57,3 +57,47 @@
 .blog-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.search-container {
+  /* width: 95%; */
+  /* max-width: 800px; */
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.search-container form {
+  width: 100%;
+  display: flex;
+}
+
+.search-container input {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+.search-container button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-container button:hover {
+  background-color: #005ecb;
+}
+.main-content {
+  width: 90%;
+  padding: 20px;
+}
+.content {
+  width: 80%;
+  padding: 20px;
+}

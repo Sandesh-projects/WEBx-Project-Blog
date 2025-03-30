@@ -24,7 +24,6 @@
   text-align: center;
 }
 
-/* Profile Info */
 .profile-pic {
   width: 120px;
   height: 120px;
@@ -45,6 +44,7 @@
   margin: 20px 0 0;
   font-size: 14px;
   color: #444;
+  text-align: left;
 }
 
 .profile-details li {
@@ -54,7 +54,6 @@
 /* Posts Container */
 .posts-container {
   width: 95%;
-  /* max-width: 600px; */
   margin: 40px 0;
   padding: 20px;
   background: #f3f3f3;
@@ -72,8 +71,9 @@
   flex-wrap: wrap;
   gap: 20px;
 }
+
 .post-card {
-  /* width: calc(50% - 10px); Uncomment if you want a two-column layout */
+  position: relative;
   width: 200px;
   background: #fff;
   border: 1px solid #ddd;
@@ -82,20 +82,59 @@
   cursor: pointer;
   transition: box-shadow 0.3s;
   display: flex;
-  flex-direction: column; /* Ensures content stacks properly */
-  align-items: center; /* Centers content horizontally */
-  overflow: hidden; /* Prevents content overflow */
-}
-
-.post-image {
-  width: 100%; /* Ensures the image takes the full width of .post-card */
-  height: 150px; /* Fixed height */
-  object-fit: contain; /* Ensures the whole image fits without cropping */
-  border-radius: 4px;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 }
 
 .post-card:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Three dots options styling */
+.post-options {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 2;
+}
+
+.three-dots {
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+}
+
+.options-menu {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.options-menu button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.options-menu button:hover {
+  background-color: #f3f3f3;
+}
+
+.post-image {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .post-title {

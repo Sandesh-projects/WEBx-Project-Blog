@@ -68,3 +68,8 @@
   border-radius: 4px;
   font-size: 14px;
 }
+.button-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}

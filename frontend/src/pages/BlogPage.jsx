@@ -143,7 +143,7 @@ function BlogPage() {
     );
   }
 
-  const { title, image, content, timestamp } = post;
+  const { title, image, content, timestamp, author } = post;
 
   return (
     <div className="blog-page-container">
@@ -152,6 +152,7 @@ function BlogPage() {
       </button>
       <div className="blog-page-header">
         <h1>{title}</h1>
+        <p className="blog-page-author">by {author || "Unknown"}</p>
         {timestamp && (
           <p className="blog-page-meta">
             Published on: {new Date(timestamp).toLocaleString()}

@@ -6,6 +6,8 @@ function Profile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
+  // State to track which post options are open; key is postId
+  const [openOptions, setOpenOptions] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,6 +38,38 @@ function Profile() {
     }
   }, [navigate]);
 
+  const handlePostClick = (postId) => {
+    navigate(`/post/${postId}`);
+  };
+
+  const toggleOptions = (postId) => {
+    setOpenOptions((prev) => ({ ...prev, [postId]: !prev[postId] }));
+  };
+
+  const handleDelete = async (postId) => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/user/${userId}/delete-post/${postId}`,
+        { method: "DELETE" }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        // Remove the deleted post from the UI
+        setUser((prevUser) => ({
+          ...prevUser,
+          posts: prevUser.posts.filter((post) => post.postId !== postId),
+        }));
+      } else {
+        alert(data.message || "Failed to delete post");
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("An error occurred while deleting the post.");
+    }
+  };
+
   if (error) {
     return <div className="profile-container">{error}</div>;
   }
@@ -44,22 +78,37 @@ function Profile() {
     return <div className="profile-container">Loading...</div>;
   }
 
-  // Use the user's posts array; each post should have a unique postId
   const userPosts = user.posts || [];
-
-  const handlePostClick = (postId) => {
-    // Navigate using the unique postId rather than an array index
-    navigate(`/post/${postId}`);
-  };
 
   return (
     <div className="profile-container">
       <div className="profile-banner"></div>
       <div className="profile-content">
-        <img src="./image.jpg" alt="User" className="profile-pic" />
+        {user.profileImage ? (
+          <img src={user.profileImage} alt="User" className="profile-pic" />
+        ) : (
+          <img src="./image.jpg" alt="Default User" className="profile-pic" />
+        )}
         <h2 className="profile-name">{user.name}</h2>
         <ul className="profile-details">
-          <li>Email: {user.email}</li>
+          <li>
+            <strong>Email:</strong> {user.email}
+          </li>
+          {user.phone && (
+            <li>
+              <strong>Phone:</strong> {user.phone}
+            </li>
+          )}
+          {user.education && (
+            <li>
+              <strong>Education:</strong> {user.education}
+            </li>
+          )}
+          {user.occupation && (
+            <li>
+              <strong>Occupation:</strong> {user.occupation}
+            </li>
+          )}
         </ul>
       </div>
 
@@ -68,19 +117,32 @@ function Profile() {
         {userPosts.length > 0 ? (
           <div className="post-list">
             {userPosts.map((post) => (
-              <div
-                className="post-card"
-                key={post.postId}
-                onClick={() => handlePostClick(post.postId)}
-              >
-                {post.image && (
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="post-image"
-                  />
-                )}
-                <h4 className="post-title">{post.title}</h4>
+              <div className="post-card" key={post.postId}>
+                <div className="post-options">
+                  <span
+                    className="three-dots"
+                    onClick={() => toggleOptions(post.postId)}
+                  >
+                    ⋮
+                  </span>
+                  {openOptions[post.postId] && (
+                    <div className="options-menu">
+                      <button onClick={() => handleDelete(post.postId)}>
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div onClick={() => handlePostClick(post.postId)}>
+                  {post.image && (
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="post-image"
+                    />
+                  )}
+                  <h4 className="post-title">{post.title}</h4>
+                </div>
               </div>
             ))}
           </div>
