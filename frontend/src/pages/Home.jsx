@@ -7,7 +7,6 @@ import "./Home.css";
 function Home() {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
-  // Use a ref so that changes in search input do not cause re-rendering
   const searchInput = useRef();
 
   const fetchPosts = async (query = "") => {
@@ -27,26 +26,33 @@ function Home() {
   };
 
   useEffect(() => {
-    // Fetch posts on component mount
     fetchPosts();
   }, []);
 
-  const handleCardClick = (postId) => {
+  const handleCardClick = async (postId) => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      try {
+        await fetch(`http://localhost:5000/api/post/${postId}/add-view`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        });
+      } catch (err) {
+        console.error("Failed to add view:", err);
+      }
+    }
     navigate(`/post/${postId}`);
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Get the value from the ref (without updating state on every key stroke)
     const query = searchInput.current.value;
     fetchPosts(query);
   };
 
   return (
     <div className="home-container">
-      <div className="sidebar">
-        <UserFunction />
-      </div>
       <div className="main-content">
         <div className="search-container">
           <form onSubmit={handleSearch}>
@@ -65,10 +71,6 @@ function Home() {
                 className="blog-card-container"
                 key={post.postId}
                 onClick={() => handleCardClick(post.postId)}
-                style={{
-                  cursor: "pointer",
-                  // width: "49%",
-                }}
               >
                 <BlogCard
                   image={post.image || "https://via.placeholder.com/150"}
@@ -80,9 +82,9 @@ function Home() {
                   readTime="2"
                   title={post.title}
                   subtitle={post.content.substring(0, 50) + "..."}
-                  views={post.views || Math.floor(Math.random() * 100)}
+                  views={post.views || 0}
                   comments={post.comments ? post.comments.length : 0}
-                  likes={post.likes || Math.floor(Math.random() * 50)}
+                  likes={post.likes || 0}
                   author={post.author || "Unknown"}
                 />
               </div>
@@ -91,6 +93,9 @@ function Home() {
             <p>No posts available</p>
           )}
         </div>
+      </div>
+      <div className="sidebar">
+        <UserFunction />
       </div>
     </div>
   );

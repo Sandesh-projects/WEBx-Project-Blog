@@ -1,31 +1,67 @@
 // App.jsx
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Profile from "./pages/Profile"; // import the new Profile page
+import Profile from "./pages/Profile";
 import CreateBlogPost from "./pages/CreateBlogPost";
 import BlogPage from "./pages/BlogPage";
+
+// PrivateRoute component to guard protected routes
+function PrivateRoute({ children }) {
+  const userId = localStorage.getItem("userId");
+  return userId ? children : <Navigate to="/login" />;
+}
 
 function App() {
   return (
     <div className="app-container">
       <Header />
-
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/create-post" element={<CreateBlogPost />} />
-        <Route path="/post/:postId" element={<BlogPage />} />
-        {/* Add more routes if needed */}
-      </Routes>
 
+        {/* Protected Routes */}
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/create-post"
+          element={
+            <PrivateRoute>
+              <CreateBlogPost />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/post/:postId"
+          element={
+            <PrivateRoute>
+              <BlogPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
       <Footer />
     </div>
   );

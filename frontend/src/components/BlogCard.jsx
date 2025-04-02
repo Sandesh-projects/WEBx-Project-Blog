@@ -18,16 +18,21 @@ function BlogCard({
         {image && <img src={image} alt={title} className="blog-image" />}
       </div>
       <div className="blog-content">
-        <p className="blog-meta">
-          {date} | by {author} | {readTime} min read
-        </p>
         <h3 className="blog-title">{title}</h3>
-        <div className="blog-stats">
-          <span>{views} views</span>
-          <span>{comments} comments</span>
-          <span>
-            {likes} <span className="heart-icon">♥</span>
-          </span>
+        {/* {subtitle && <p className="blog-subtitle">{subtitle}</p>} */}
+        <div className="blog-footer">
+          <div className="footer-left">
+            <p className="blog-meta">
+              {date} | Author : {author}
+            </p>
+          </div>
+          <div className="footer-right">
+            <span className="views">{views} views</span>
+            <span className="comments">{comments} comments</span>
+            <span className="likes">
+              {likes} <span className="heart-icon">♥</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>

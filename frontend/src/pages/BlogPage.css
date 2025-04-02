@@ -60,10 +60,19 @@
   margin: 20px 0;
 }
 
+/* Modified content container style to constrain images */
 .blog-page-content {
   font-size: 16px;
   line-height: 1.8;
   color: #333;
+  overflow-wrap: break-word;
+}
+
+.blog-page-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: auto;
 }
 
 /* Loading Spinner */
@@ -230,4 +239,25 @@
 .reply-timestamp {
   font-size: 12px;
   color: #777;
+}
+
+/* Like/Dislike Section */
+.like-dislike-container {
+  margin: 20px 0;
+  display: flex;
+  gap: 20px;
+}
+
+.like-dislike-container button {
+  padding: 10px 20px;
+  background-color: #0077ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.like-dislike-container button:hover {
+  background-color: #005ecb;
 }

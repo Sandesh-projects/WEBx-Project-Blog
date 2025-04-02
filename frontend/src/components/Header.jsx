@@ -17,7 +17,7 @@ function Header() {
   return (
     <header>
       <nav>
-        <Link to="/">MyBlog</Link>
+        <Link to="/home">MyBlog</Link>
         <ul>
           {isLoggedIn ? (
             <>

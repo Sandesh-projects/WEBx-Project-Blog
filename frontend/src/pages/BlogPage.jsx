@@ -1,46 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import "./BlogPage.css";
 
 function BlogPage() {
   const { postId } = useParams();
   const navigate = useNavigate();
+
+  // State declarations
   const [post, setPost] = useState(null);
   const [error, setError] = useState("");
-  const [commenter, setCommenter] = useState("");
   const [commentContent, setCommentContent] = useState("");
   const [comments, setComments] = useState([]);
-  // State for reply forms; each key is a commentId with boolean visibility
   const [replyVisible, setReplyVisible] = useState({});
-  // State for reply input values per commentId
   const [replyData, setReplyData] = useState({});
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/post/${postId}`
-        );
-        if (!response.ok) {
-          const errData = await response.json();
-          throw new Error(errData.message || "Failed to fetch post");
-        }
-        const data = await response.json();
-        setPost(data);
-        setComments(data.comments || []);
-      } catch (err) {
-        setError(err.message);
+  // Helper to fetch post data
+  const fetchPostData = useCallback(async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/post/${postId}`);
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.message || "Failed to fetch post");
       }
-    };
-    if (postId) {
-      fetchPost();
+      const data = await response.json();
+      setPost(data);
+      setComments(data.comments || []);
+    } catch (err) {
+      setError(err.message);
     }
   }, [postId]);
 
+  useEffect(() => {
+    if (postId) {
+      fetchPostData();
+    }
+  }, [postId, fetchPostData]);
+
+  // Helper to update post data after like/dislike toggles
+  const refreshPost = async () => {
+    try {
+      const refreshed = await fetch(`http://localhost:5000/api/post/${postId}`);
+      const data = await refreshed.json();
+      setPost(data);
+    } catch (err) {
+      console.error("Error refreshing post:", err);
+    }
+  };
+
+  // Add comment handler
   const handleAddComment = async (e) => {
     e.preventDefault();
-    if (!commenter || !commentContent) {
-      alert("Please enter your name and comment.");
+    const userId = localStorage.getItem("userId");
+    if (!userId || !commentContent) {
+      alert("Please log in and enter comment content.");
       return;
     }
     try {
@@ -49,38 +62,45 @@ function BlogPage() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ commenter, content: commentContent }),
+          body: JSON.stringify({ userId, content: commentContent }),
         }
       );
       const data = await response.json();
       if (response.ok) {
         setComments([...comments, data.comment]);
-        setCommenter("");
         setCommentContent("");
       } else {
         alert(data.message || "Failed to add comment.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error adding comment:", error);
       alert("An error occurred while adding the comment.");
     }
   };
 
+  // Toggle reply form visibility
   const toggleReplyForm = (commentId) => {
     setReplyVisible((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
   };
 
-  const handleReplyChange = (commentId, field, value) => {
+  // Handle reply content changes
+  const handleReplyChange = (commentId, value) => {
     setReplyData((prev) => ({
       ...prev,
-      [commentId]: { ...prev[commentId], [field]: value },
+      [commentId]: { replyContent: value },
     }));
   };
 
+  // Add reply handler
   const handleAddReply = async (commentId) => {
     const replyInfo = replyData[commentId];
-    if (!replyInfo || !replyInfo.replyCommenter || !replyInfo.replyContent) {
-      alert("Please enter your name and reply content.");
+    if (!replyInfo || !replyInfo.replyContent) {
+      alert("Please enter your reply content.");
+      return;
+    }
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please log in to reply.");
       return;
     }
     try {
@@ -91,14 +111,14 @@ function BlogPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             commentId,
-            replyCommenter: replyInfo.replyCommenter,
+            userId,
             replyContent: replyInfo.replyContent,
           }),
         }
       );
       const data = await response.json();
       if (response.ok) {
-        // Update the specific comment's replies locally
+        // Update comments with the new reply
         setComments((prevComments) =>
           prevComments.map((comment) =>
             comment.commentId === commentId
@@ -111,21 +131,76 @@ function BlogPage() {
               : comment
           )
         );
-        // Clear the reply inputs and hide the form
+        // Reset reply input and hide the form
         setReplyData((prev) => ({
           ...prev,
-          [commentId]: { replyCommenter: "", replyContent: "" },
+          [commentId]: { replyContent: "" },
         }));
         setReplyVisible((prev) => ({ ...prev, [commentId]: false }));
       } else {
         alert(data.message || "Failed to add reply.");
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error adding reply:", error);
       alert("An error occurred while adding the reply.");
     }
   };
 
+  // Toggle like for post
+  const handleToggleLike = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please log in to like posts.");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/post/${postId}/toggle-like`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        }
+      );
+      if (response.ok) {
+        refreshPost();
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Failed to toggle like");
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    }
+  };
+
+  // Toggle dislike for post
+  const handleToggleDislike = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("Please log in to dislike posts.");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/post/${postId}/toggle-dislike`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        }
+      );
+      if (response.ok) {
+        refreshPost();
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Failed to toggle dislike");
+      }
+    } catch (error) {
+      console.error("Error toggling dislike:", error);
+    }
+  };
+
+  // Render error state if one exists
   if (error) {
     return (
       <div className="blog-page-container">
@@ -134,6 +209,7 @@ function BlogPage() {
     );
   }
 
+  // Render a loading state if the post hasn't been fetched yet
   if (!post) {
     return (
       <div className="blog-page-container loading">
@@ -143,7 +219,15 @@ function BlogPage() {
     );
   }
 
-  const { title, image, content, timestamp, author } = post;
+  const {
+    title,
+    image,
+    content,
+    timestamp,
+    author,
+    likes = 0,
+    dislikes = 0,
+  } = post;
 
   return (
     <div className="blog-page-container">
@@ -152,7 +236,12 @@ function BlogPage() {
       </button>
       <div className="blog-page-header">
         <h1>{title}</h1>
-        <p className="blog-page-author">by {author || "Unknown"}</p>
+        <p
+          className="blog-page-author"
+          style={{ textDecorationLine: "underline" }}
+        >
+          Author : {author || "Unknown"}
+        </p>
         {timestamp && (
           <p className="blog-page-meta">
             Published on: {new Date(timestamp).toLocaleString()}
@@ -164,8 +253,29 @@ function BlogPage() {
       ) : (
         <div className="image-placeholder">No Image Available</div>
       )}
-      <div className="blog-page-content">
-        <p>{content}</p>
+      <hr />
+      <div
+        className="blog-page-content"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+
+      <div className="like-dislike-container">
+        <button
+          onClick={handleToggleLike}
+          className="like-btn"
+          style={{ background: "none", color: "black" }}
+        >
+          <FaThumbsUp style={{ marginRight: "6px" }} />
+          {likes}
+        </button>
+        <button
+          onClick={handleToggleDislike}
+          className="dislike-btn"
+          style={{ background: "none", color: "black" }}
+        >
+          <FaThumbsDown style={{ marginRight: "6px" }} />
+          {dislikes}
+        </button>
       </div>
       <div className="comments-section">
         <h3>Comments</h3>
@@ -178,7 +288,6 @@ function BlogPage() {
                 <p className="comment-timestamp">
                   {new Date(comment.timestamp).toLocaleString()}
                 </p>
-                {/* Replies */}
                 {comment.replies && comment.replies.length > 0 && (
                   <div className="replies-list">
                     {comment.replies.map((reply) => (
@@ -202,36 +311,11 @@ function BlogPage() {
                 </button>
                 {replyVisible[comment.commentId] && (
                   <div className="reply-form">
-                    <input
-                      type="text"
-                      placeholder="Your name"
-                      value={
-                        (replyData[comment.commentId] &&
-                          replyData[comment.commentId].replyCommenter) ||
-                        ""
-                      }
-                      onChange={(e) =>
-                        handleReplyChange(
-                          comment.commentId,
-                          "replyCommenter",
-                          e.target.value
-                        )
-                      }
-                      required
-                    />
                     <textarea
                       placeholder="Your reply..."
-                      value={
-                        (replyData[comment.commentId] &&
-                          replyData[comment.commentId].replyContent) ||
-                        ""
-                      }
+                      value={replyData[comment.commentId]?.replyContent || ""}
                       onChange={(e) =>
-                        handleReplyChange(
-                          comment.commentId,
-                          "replyContent",
-                          e.target.value
-                        )
+                        handleReplyChange(comment.commentId, e.target.value)
                       }
                       required
                     />
@@ -250,13 +334,6 @@ function BlogPage() {
           <p>No comments yet.</p>
         )}
         <form onSubmit={handleAddComment} className="comment-form">
-          <input
-            type="text"
-            placeholder="Your name"
-            value={commenter}
-            onChange={(e) => setCommenter(e.target.value)}
-            required
-          />
           <textarea
             placeholder="Add a comment..."
             value={commentContent}

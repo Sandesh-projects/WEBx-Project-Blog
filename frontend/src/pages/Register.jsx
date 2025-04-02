@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Auth.css";
 
@@ -15,14 +15,24 @@ function Register() {
   const [phone, setPhone] = useState("");
   const [education, setEducation] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [profileImage, setProfileImage] = useState(""); // New field for profile image
+  const [profileImage, setProfileImage] = useState(""); // For profile image (Base64)
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // When Register page loads, clear any existing user data from localStorage.
+  useEffect(() => {
+    if (localStorage.getItem("userId")) {
+      localStorage.removeItem("userId");
+    }
+    if (localStorage.getItem("token")) {
+      localStorage.removeItem("token");
+    }
+  }, []);
+
   const handleNext = (e) => {
     e.preventDefault();
-    // Validate step 1 fields
+    // Validate required fields for step 1
     if (!name || !email || !password) {
       setError("Please fill out all required fields.");
       return;
@@ -41,7 +51,7 @@ function Register() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result); // Convert to Base64 string
+        setProfileImage(reader.result); // Convert image to Base64 string
       };
       reader.readAsDataURL(file);
     }
