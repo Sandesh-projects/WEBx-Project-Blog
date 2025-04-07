@@ -53,6 +53,9 @@ function Home() {
 
   return (
     <div className="home-container">
+      <div className="sidebar">
+        <UserFunction />
+      </div>
       <div className="main-content">
         <div className="search-container">
           <form onSubmit={handleSearch}>
@@ -93,9 +96,6 @@ function Home() {
             <p>No posts available</p>
           )}
         </div>
-      </div>
-      <div className="sidebar">
-        <UserFunction />
       </div>
     </div>
   );

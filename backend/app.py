@@ -11,7 +11,8 @@ from datetime import datetime  # For timestamps
 load_dotenv()  # Load variables from .env
 
 app = Flask(__name__)
-CORS(app)
+# Enable CORS for all routes and allow only your frontend origin
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 # MongoDB setup
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
@@ -104,11 +105,9 @@ def get_single_post(post_id):
     user = users_collection.find_one({"posts.postId": post_id})
     if not user:
         return jsonify({"message": "Post not found"}), 404
-
     for post in user.get("posts", []):
         if post.get("postId") == post_id:
             return jsonify(post), 200
-
     return jsonify({"message": "Post not found"}), 404
 
 @app.route("/api/user/<user_id>", methods=["GET"])
@@ -137,11 +136,9 @@ def create_post(user_id):
         user_object_id = ObjectId(user_id)
     except Exception:
         return jsonify({"message": "Invalid user ID format"}), 400
-
     user = users_collection.find_one({"_id": user_object_id})
     if not user:
         return jsonify({"message": "User not found"}), 404
-
     data = request.get_json()
     title = data.get("title")
     content = data.get("content")  # Full HTML content
@@ -170,6 +167,7 @@ def create_post(user_id):
     )
 
     return jsonify({"message": "Post created successfully", "postId": new_post["postId"]}), 201
+
 # Updated add-comment endpoint that uses userId to auto-fetch username
 @app.route("/api/post/<post_id>/add-comment", methods=["POST"])
 def add_comment(post_id):
@@ -235,7 +233,7 @@ def add_reply(post_id):
     else:
         return jsonify({"message": "Failed to add reply"}), 400
 
-# Toggle Like endpoint (as before)
+# Toggle Like endpoint with toggle functionality
 @app.route("/api/post/<post_id>/toggle-like", methods=["POST"])
 def toggle_like(post_id):
     data = request.get_json()
@@ -281,7 +279,7 @@ def toggle_like(post_id):
         else:
             return jsonify({"message": "Failed to like post"}), 400
 
-# Toggle Dislike endpoint (as before)
+# Toggle Dislike endpoint with toggle functionality
 @app.route("/api/post/<post_id>/toggle-dislike", methods=["POST"])
 def toggle_dislike(post_id):
     data = request.get_json()
@@ -341,8 +339,8 @@ def delete_post(user_id, post_id):
         return jsonify({"message": "Post deleted successfully"}), 200
     else:
         return jsonify({"message": "Failed to delete post"}), 400
-    
-# New endpoint: Increment view count only if user hasn't viewed before
+
+#Increment view count only if user hasn't viewed before
 @app.route("/api/post/<post_id>/add-view", methods=["POST"])
 def add_view(post_id):
     data = request.get_json()
