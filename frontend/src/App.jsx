@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import CreateBlogPost from "./pages/CreateBlogPost";
 import BlogPage from "./pages/BlogPage";
+import UpdateBlogPost from "./pages/UpdateBlogPost";
 
 // PrivateRoute component to guard protected routes
 function PrivateRoute({ children }) {
@@ -55,6 +56,15 @@ function App() {
           element={
             <PrivateRoute>
               <BlogPage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/update-post/:postId"
+          element={
+            <PrivateRoute>
+              <UpdateBlogPost />
             </PrivateRoute>
           }
         />

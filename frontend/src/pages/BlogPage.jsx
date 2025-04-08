@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import UserFunction from "../components/UserFunction";
 import "./BlogPage.css";
 
 function BlogPage() {
@@ -230,118 +231,123 @@ function BlogPage() {
   } = post;
 
   return (
-    <div className="blog-page-container">
-      <button onClick={() => navigate("/home")} className="back-btn">
-        ← Back to Home
-      </button>
-      <div className="blog-page-header">
-        <h1>{title}</h1>
-        <p
-          className="blog-page-author"
-          style={{ textDecorationLine: "underline" }}
-        >
-          Author : {author || "Unknown"}
-        </p>
-        {timestamp && (
-          <p className="blog-page-meta">
-            Published on: {new Date(timestamp).toLocaleString()}
+    <div className="blog-page" style={{ display: "flex" }}>
+      <div className="sidebar" style={{ flex: "0 0 20%" }}>
+        <UserFunction />
+      </div>
+      <div className="blog-page-container">
+        <button onClick={() => navigate("/home")} className="back-btn">
+          ← Back to Home
+        </button>
+        <div className="blog-page-header">
+          <h1>{title}</h1>
+          <p
+            className="blog-page-author"
+            style={{ textDecorationLine: "underline" }}
+          >
+            Author : {author || "Unknown"}
           </p>
-        )}
-      </div>
-      {image ? (
-        <img src={image} alt={title} className="blog-page-image" />
-      ) : (
-        <div className="image-placeholder">No Image Available</div>
-      )}
-      <hr />
-      <div
-        className="blog-page-content"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-
-      <div className="like-dislike-container">
-        <button
-          onClick={handleToggleLike}
-          className="like-btn"
-          style={{ background: "none", color: "black" }}
-        >
-          <FaThumbsUp style={{ marginRight: "6px" }} />
-          {likes}
-        </button>
-        <button
-          onClick={handleToggleDislike}
-          className="dislike-btn"
-          style={{ background: "none", color: "black" }}
-        >
-          <FaThumbsDown style={{ marginRight: "6px" }} />
-          {dislikes}
-        </button>
-      </div>
-      <div className="comments-section">
-        <h3>Comments</h3>
-        {comments.length > 0 ? (
-          <div className="comments-list">
-            {comments.map((comment) => (
-              <div key={comment.commentId} className="comment-card">
-                <p className="commenter-name">{comment.commenter}</p>
-                <p className="comment-content">{comment.content}</p>
-                <p className="comment-timestamp">
-                  {new Date(comment.timestamp).toLocaleString()}
-                </p>
-                {comment.replies && comment.replies.length > 0 && (
-                  <div className="replies-list">
-                    {comment.replies.map((reply) => (
-                      <div key={reply.replyId} className="reply-card">
-                        <p className="reply-commenter">
-                          {reply.replyCommenter}
-                        </p>
-                        <p className="reply-content">{reply.replyContent}</p>
-                        <p className="reply-timestamp">
-                          {new Date(reply.timestamp).toLocaleString()}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <button
-                  onClick={() => toggleReplyForm(comment.commentId)}
-                  className="reply-btn"
-                >
-                  {replyVisible[comment.commentId] ? "Cancel" : "Reply"}
-                </button>
-                {replyVisible[comment.commentId] && (
-                  <div className="reply-form">
-                    <textarea
-                      placeholder="Your reply..."
-                      value={replyData[comment.commentId]?.replyContent || ""}
-                      onChange={(e) =>
-                        handleReplyChange(comment.commentId, e.target.value)
-                      }
-                      required
-                    />
-                    <button
-                      onClick={() => handleAddReply(comment.commentId)}
-                      className="submit-reply-btn"
-                    >
-                      Submit Reply
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          {timestamp && (
+            <p className="blog-page-meta">
+              Published on: {new Date(timestamp).toLocaleString()}
+            </p>
+          )}
+        </div>
+        {image ? (
+          <img src={image} alt={title} className="blog-page-image" />
         ) : (
-          <p>No comments yet.</p>
+          <div className="image-placeholder">No Image Available</div>
         )}
-        <form onSubmit={handleAddComment} className="comment-form">
-          <textarea
-            placeholder="Add a comment..."
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-            required
-          />
-          <button type="submit">Submit Comment</button>
-        </form>
+        <hr />
+        <div
+          className="blog-page-content"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+
+        <div className="like-dislike-container">
+          <button
+            onClick={handleToggleLike}
+            className="like-btn"
+            style={{ background: "none", color: "black" }}
+          >
+            <FaThumbsUp style={{ marginRight: "6px" }} />
+            {likes}
+          </button>
+          <button
+            onClick={handleToggleDislike}
+            className="dislike-btn"
+            style={{ background: "none", color: "black" }}
+          >
+            <FaThumbsDown style={{ marginRight: "6px" }} />
+            {dislikes}
+          </button>
+        </div>
+        <div className="comments-section">
+          <h3>Comments</h3>
+          {comments.length > 0 ? (
+            <div className="comments-list">
+              {comments.map((comment) => (
+                <div key={comment.commentId} className="comment-card">
+                  <p className="commenter-name">{comment.commenter}</p>
+                  <p className="comment-content">{comment.content}</p>
+                  <p className="comment-timestamp">
+                    {new Date(comment.timestamp).toLocaleString()}
+                  </p>
+                  {comment.replies && comment.replies.length > 0 && (
+                    <div className="replies-list">
+                      {comment.replies.map((reply) => (
+                        <div key={reply.replyId} className="reply-card">
+                          <p className="reply-commenter">
+                            {reply.replyCommenter}
+                          </p>
+                          <p className="reply-content">{reply.replyContent}</p>
+                          <p className="reply-timestamp">
+                            {new Date(reply.timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => toggleReplyForm(comment.commentId)}
+                    className="reply-btn"
+                  >
+                    {replyVisible[comment.commentId] ? "Cancel" : "Reply"}
+                  </button>
+                  {replyVisible[comment.commentId] && (
+                    <div className="reply-form">
+                      <textarea
+                        placeholder="Your reply..."
+                        value={replyData[comment.commentId]?.replyContent || ""}
+                        onChange={(e) =>
+                          handleReplyChange(comment.commentId, e.target.value)
+                        }
+                        required
+                      />
+                      <button
+                        onClick={() => handleAddReply(comment.commentId)}
+                        className="submit-reply-btn"
+                      >
+                        Submit Reply
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No comments yet.</p>
+          )}
+          <form onSubmit={handleAddComment} className="comment-form">
+            <textarea
+              placeholder="Add a comment..."
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              required
+            />
+            <button type="submit">Submit Comment</button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -367,6 +367,63 @@ def add_view(post_id):
         return jsonify({"message": "View added"}), 200
     else:
         return jsonify({"message": "Failed to add view"}), 400
+@app.route("/api/user/<user_id>/update", methods=["PUT"])
+def update_user(user_id):
+    try:
+        user_object_id = ObjectId(user_id)
+    except Exception:
+        return jsonify({"message": "Invalid user ID format"}), 400
 
+    data = request.get_json()
+    # Only update these fields (email is not allowed to change)
+    update_fields = {}
+    if "name" in data:
+        update_fields["name"] = data["name"]
+    if "phone" in data:
+        update_fields["phone"] = data["phone"]
+    if "education" in data:
+        update_fields["education"] = data["education"]
+    if "occupation" in data:
+        update_fields["occupation"] = data["occupation"]
+    if "profileImage" in data:
+        update_fields["profileImage"] = data["profileImage"]
+
+    if not update_fields:
+        return jsonify({"message": "No fields to update"}), 400
+
+    result = users_collection.update_one({"_id": user_object_id}, {"$set": update_fields})
+    if result.modified_count > 0:
+        return jsonify({"message": "User updated successfully"}), 200
+    else:
+        return jsonify({"message": "No changes made"}), 200
+# Endpoint to update a specific post
+@app.route("/api/user/<user_id>/update-post/<post_id>", methods=["PUT"])
+def update_post(user_id, post_id):
+    try:
+        user_object_id = ObjectId(user_id)
+    except Exception:
+        return jsonify({"message": "Invalid user ID format"}), 400
+    data = request.get_json()
+    update_fields = {}
+    if "title" in data:
+        update_fields["posts.$[post].title"] = data["title"]
+    if "content" in data:
+        update_fields["posts.$[post].content"] = data["content"]
+    if "image" in data:
+        update_fields["posts.$[post].image"] = data["image"]
+
+    if not update_fields:
+        return jsonify({"message": "No fields to update"}), 400
+
+    result = users_collection.update_one(
+        {"_id": user_object_id},
+        {"$set": update_fields},
+        array_filters=[{"post.postId": post_id}]
+    )
+    if result.modified_count > 0:
+        return jsonify({"message": "Post updated successfully"}), 200
+    else:
+        return jsonify({"message": "No changes made or post not found"}), 200
+    
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,3 +1,4 @@
+/* General Layout */
 .profile-container {
   width: 100%;
   min-height: 100vh;
@@ -5,6 +6,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 40px;
 }
 
 .profile-banner {
@@ -22,6 +24,41 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
+  position: relative;
+}
+
+/* Profile Options Icon and Menu */
+.profile-options {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.profile-options-menu {
+  position: absolute;
+  top: 35px;
+  right: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.profile-options-menu button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  text-align: left;
+}
+
+.profile-options-menu button:hover {
+  background-color: #f3f3f3;
 }
 
 .profile-pic {
@@ -91,7 +128,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Three dots options styling */
+/* Three dots options styling for posts */
 .post-options {
   position: absolute;
   top: 5px;
@@ -142,4 +179,643 @@
   font-size: 16px;
   font-weight: bold;
   text-align: center;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.update-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.update-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.update-form input {
+  margin-bottom: 15px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.profile-option-button {
+  color: black;
+}
+/* General Layout */
+.profile-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.profile-banner {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+}
+
+.profile-content {
+  background-color: #fff;
+  width: 80%;
+  max-width: 600px;
+  margin-top: -70px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* Profile Options */
+.profile-options {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.profile-options-menu {
+  position: absolute;
+  top: 35px;
+  right: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.profile-options-menu button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  text-align: left;
+}
+
+.profile-options-menu button:hover {
+  background-color: #f3f3f3;
+}
+
+/* Profile Picture and Details */
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: -60px;
+  border: 4px solid #fff;
+}
+
+.profile-name {
+  margin: 16px 0 8px;
+  font-size: 24px;
+}
+
+.profile-details {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  font-size: 14px;
+  color: #444;
+  text-align: left;
+}
+
+.profile-details li {
+  margin: 6px 0;
+}
+
+/* Posts Container */
+.posts-container {
+  width: 95%;
+  margin: 40px 0;
+  padding: 20px;
+  background: #f3f3f3;
+  border-radius: 8px;
+}
+
+.posts-container h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: left;
+}
+
+.post-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.post-card {
+  position: relative;
+  width: 200px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.post-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Three dots options styling for posts */
+.post-options {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 2;
+}
+
+.three-dots {
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+}
+
+.options-menu {
+  position: absolute;
+  top: 25px;
+  right: 5px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.options-menu button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.options-menu button:hover {
+  background-color: #f3f3f3;
+}
+
+.post-image {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.post-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.update-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.update-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.update-form input {
+  margin-bottom: 15px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.profile-option-button {
+  color: black;
+}
+/* Posts Container */
+.posts-container {
+  width: 95%;
+  margin: 40px 0;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.posts-container h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  text-align: left;
+  color: #333;
+}
+
+/* Flex layout for post list */
+.post-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+/* Post Card */
+.post-card {
+  position: relative;
+  width: 220px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Container for clickable content */
+.post-card-content {
+  cursor: pointer;
+}
+
+/* Post Options (three dots and menu) */
+.post-options {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+}
+
+.three-dots {
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+  color: #555;
+}
+
+.options-menu {
+  position: absolute;
+  top: 30px;
+  right: 8px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.options-menu button {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+.options-menu button:hover {
+  background-color: #f1f1f1;
+}
+
+/* Post Image */
+.post-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+/* Post Title */
+.post-title {
+  margin: 0;
+  font-size: 18px;
+  text-align: center;
+  color: #333;
+}
+/* Profile Container & Banner */
+.profile-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.profile-banner {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+}
+
+/* Profile Content */
+.profile-content {
+  background-color: #fff;
+  width: 80%;
+  max-width: 600px;
+  margin-top: -70px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: -60px;
+  border: 4px solid #fff;
+}
+
+.profile-name {
+  margin: 16px 0 8px;
+  font-size: 24px;
+  color: #333;
+}
+
+.profile-details {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  font-size: 14px;
+  color: #444;
+  text-align: left;
+}
+
+.profile-details li {
+  margin: 6px 0;
+}
+
+/* Profile Options for Update Profile */
+.profile-options {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 24px;
+  z-index: 2;
+}
+
+.profile-options-menu {
+  position: absolute;
+  top: 35px;
+  right: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 3;
+}
+
+.profile-options-menu button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-option-button {
+  color: #0077ff;
+}
+
+.profile-options-menu button:hover {
+  background-color: #f3f3f3;
+}
+
+/* Posts Container */
+.posts-container {
+  width: 95%;
+  margin: 40px 0;
+  padding: 20px;
+  background: #f3f3f3;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.posts-container h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  text-align: left;
+  color: #333;
+}
+
+.post-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+.post-card {
+  position: relative;
+  width: 220px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.post-card-content {
+  cursor: pointer;
+}
+
+.post-options {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+}
+
+.three-dots {
+  cursor: pointer;
+  font-size: 22px;
+  color: #555;
+}
+
+.options-menu {
+  position: absolute;
+  top: 30px;
+  right: 8px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.options-menu button {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.options-menu button:hover {
+  background-color: #f1f1f1;
+}
+
+/* Divider Line in Options Menu */
+.options-menu hr.options-divider {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+/* Post Image and Title */
+.post-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.post-title {
+  margin: 0;
+  font-size: 18px;
+  text-align: center;
+  color: #333;
+}
+
+/* Modal Styles for Update Profile */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.update-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.update-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.update-form input {
+  margin-bottom: 15px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
